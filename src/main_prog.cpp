@@ -63,13 +63,14 @@ void task_blink_func(se::SimpleTask &task, void *pvParameters) {
   settings.uxPriority   = 2;
   settings.period       = 10;
 
-  STMEPIC_ASSING_TO_OR_HRESET(bmp280, se::sensors::barometer::BMP280::Make(i2c1));
-  bmp280->device_task_set_settings(settings);
-  bmp280->device_start();
-  STMEPIC_NONE_OR_HRESET(bmp280->device_task_start());
+  // example of addign device and callbacks , do not use bmp280 since its not soldered on the board
+  // STMEPIC_ASSING_TO_OR_HRESET(bmp280, se::sensors::barometer::BMP280::Make(i2c1));
+  // bmp280->device_task_set_settings(settings);
+  // bmp280->device_start();
+  // STMEPIC_NONE_OR_HRESET(bmp280->device_task_start());
 
-  fdcan->add_callback(CAN_BAROMETER_STATUS_FRAME_ID, can_callback_bmp280_get_status, bmp280.get());
-  fdcan->add_callback(CAN_BAROMETER_DATA_FRAME_ID, can_callback_bmp280_get_data, bmp280.get());
+  // fdcan->add_callback(CAN_BAROMETER_STATUS_FRAME_ID, can_callback_bmp280_get_status, bmp280.get());
+  // fdcan->add_callback(CAN_BAROMETER_DATA_FRAME_ID, can_callback_bmp280_get_data, bmp280.get());
 
   se::CanDataFrame frame;
   frame.extended_id    = true;
@@ -103,13 +104,6 @@ void main_prog() {
   i2c1->hardware_reset();
 
 
-  // STMEPIC_ASSING_TO_OR_HRESET(bno055, se::sensors::imu::BNO055::Make(i2c1, nullptr, nullptr));
-  // // bno055->device_task_set_settings(settings);
-  // STMEPIC_NONE_OR_HRESET(bno055->device_task_start());
-
-  task_blink.task_init(task_blink_func, nullptr, 100, nullptr, 600);
-  task_blink.task_run();
-
   FDCAN_FilterTypeDef sFilterConfig = {};
   sFilterConfig.IdType              = FDCAN_EXTENDED_ID;
   sFilterConfig.FilterIndex         = 0;
@@ -132,8 +126,9 @@ void main_prog() {
   STMEPIC_ASSING_TO_OR_HRESET(fdcan, se::FDCAN::Make(hfdcan1, filter_config, nullptr, nullptr));
   fdcan->hardware_start();
 
-  // se::Ticker::get_instance().init(&htim6);
 
-  // Your code here like your tasks, drivers, etc.
+  task_blink.task_init(task_blink_func, nullptr, 100, nullptr, 600);
+  task_blink.task_run();
+
   // Do not start FreeRTOS kernel here since it will be start later in main.cpp
 }
