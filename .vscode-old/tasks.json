@@ -1,0 +1,124 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // {
+    //   "label": "Setup-Remote-Workspace",
+    //   "type": "shell",
+    //   "command": "ssh",
+    //   "args": [
+    //     "${input:remoteUser}@${input:remoteIP}",
+    //     "\"bash -c 'mkdir -p ~/debug/${workspaceFolderBasename} && exit'\""
+    //   ],
+    //   "problemMatcher": []
+    // },
+    // {
+    //   "label": "Copy-Files-To-Remote",
+    //   "type": "shell",
+    //   "dependsOn": "Setup-Remote-Workspace",
+    //   "command": "bash",
+    //   "args": [
+    //     "-c",
+    //     " scp ${workspaceFolder}/build/firmware.elf ${input:remoteUser}@${input:remoteIP}:~/debug/${workspaceFolderBasename}"
+    //   ],
+    //   "problemMatcher": []
+    // },
+    // {
+    //   "label": "Generate-Random-Port",
+    //   "type": "shell",
+    //   "command": "shuf -i 50001-59999 -n 1 > .vscode/random-port.txt",
+    //   "problemMatcher": []
+    // },
+    // {
+    //   "label": "Read-Port",
+    //   "type": "shell",
+    //   "command": "echo  ${input:getPort}",
+    //   "problemMatcher": [],
+    //   "presentation": {
+    //     "echo": false,
+    //     "reveal": "always",
+    //     "focus": true,
+    //     "panel": "new"
+    //   }
+    // },
+    {
+      "label": "Start-Remote-OpenOCD",
+      "type": "shell",
+      "dependsOn": "Generate-Random-Port",
+      "command": "ssh",
+      "args": [
+        "-t", // Force pseudo-terminal allocation
+        "${input:remoteUser}@${input:remoteIP}",
+        "'openocd  -c \"bindto 0.0.0.0\" -c \"gdb_port ${input:getPort}\" -f interface/stlink.cfg -f target/stm32h7x.cfg -c \"hla_serial ${input:stlinkID}\" -c \"init; arm semihosting enable\"'"
+      ],
+      "isBackground": true, // run task in backgound
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": [
+          {
+            "regexp": ".",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Info : Listening on port", // Adjust this to match OpenOCD's output
+          "endsPattern": "for gdb connections" // Adjust this to match OpenOCD's output
+        }
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "remoteUser",
+      "type": "pickString",
+      "description": "Enter the username for the remote machine",
+      "options": [
+        "ubuntu",
+        "orangepi"
+      ],
+      "default": "ubuntu"
+    },
+    {
+      "id": "remoteIP",
+      "type": "pickString",
+      "description": "Enter the IP address of the remote machine",
+      "options": [
+        {
+          "label": "VPN",
+          "value": "10.10.0.6"
+        },
+        {
+          "label": "Local",
+          "value": "192.168.20.2"
+        }
+      ],
+      "default": "10.10.0.6"
+    },
+    {
+      "id": "stlinkID",
+      "type": "pickString",
+      "description": "Enter the ST-LINK ID to connect to",
+      "options": [
+        {
+          "label": "Nav module rev1",
+          "value": "49FF6B064978785130411667"
+        }
+      ],
+      "default": "49FF6B064978785130411667"
+    },
+    {
+      "id": "getPort",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "cat .vscode/gdb-port.txt",
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "WORKSPACE": "${workspaceFolder[0]}",
+        }
+      }
+    }
+  ]
+}
