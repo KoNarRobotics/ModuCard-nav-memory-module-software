@@ -1,5 +1,4 @@
 {
-  "stm32-for-vscode.openOCDPath": "/usr/local/bin/openocd",
   "files.associations": {
     "array": "cpp",
     "atomic": "cpp",
@@ -73,17 +72,10 @@
     "variant": "cpp",
     "source_location": "c",
     "complex": "cpp",
-    "usb_device.h": "c"
+    "usb_device.h": "c",
+    "w25q128.h": "c"
   },
   "editor.formatOnSave": true,
-  "python.autoComplete.extraPaths": [
-    "/opt/ros/humble/lib/python3.10/site-packages",
-    "/opt/ros/humble/local/lib/python3.10/dist-packages"
-  ],
-  "python.analysis.extraPaths": [
-    "/opt/ros/humble/lib/python3.10/site-packages",
-    "/opt/ros/humble/local/lib/python3.10/dist-packages"
-  ],
   "cortex-debug.variableUseNaturalFormat": true,
   "ros.distro": "jazzy",
   // "cortex-debug.gdbPath": "gdb-multiarch"
