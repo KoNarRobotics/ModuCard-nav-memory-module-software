@@ -1,4 +1,4 @@
-[submodule "StmEpic"]
+[submodule "src/StmEpic"]
 	path = src/StmEpic
 	url = git@github.com:X-Lemon-X/StmEpic.git
 [submodule "src/can_constants"]
