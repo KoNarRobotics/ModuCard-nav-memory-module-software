@@ -1,9 +1,0 @@
-
-**/__pycache__
-**/output/can_messages.c
-**/output/can_messages.h
-**/output/can_messages.dbc
-**/output/docs.md
-build
-.vscode
-.venv
