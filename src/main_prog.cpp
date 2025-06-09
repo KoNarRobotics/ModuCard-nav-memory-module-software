@@ -7,6 +7,13 @@
 #include "BMP280.hpp"
 #include "logger.hpp"
 #include "can_messages.h"
+#include "w25q128.hpp"
+#include "spi.hpp"
+#include "hardware.hpp"
+#include "stmepic.hpp"
+#include "FreeRTOS.h"
+#include "task.h"
+#include <cstring>
 
 
 std::shared_ptr<se::I2C> i2c1;
