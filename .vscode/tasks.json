@@ -13,7 +13,6 @@
     {
       "label": "Start-Remote-OpenOCD",
       "type": "shell",
-      "dependsOn": "Generate-Random-Port",
       "command": "ssh",
       "args": [
         "-t",

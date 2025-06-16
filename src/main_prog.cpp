@@ -60,6 +60,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 se::SimpleTask task_blink;
 
 void task_blink_func(se::SimpleTask &task, void *pvParameters) {
+  (void)task;
+  (void)pvParameters;
   gpio_imu_nreset.write(1);
   gpio_user_led_1.write(0);
   gpio_user_led_2.write(0);
@@ -93,6 +95,7 @@ void task_blink_func(se::SimpleTask &task, void *pvParameters) {
 
 
 void can_callback(se::CanBase &can, se::CanDataFrame &msg, void *args) {
+  (void)msg;
   (void)can;
   (void)args;
   // log_debug(msg.to_string());
